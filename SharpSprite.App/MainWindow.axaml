@@ -1,8 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:SharpSprite.App.ViewModels"
+        xmlns:docking="clr-namespace:SharpSprite.App.Ui.Docking"
         xmlns:controls="using:SharpSprite.App.Controls"
-        xmlns:tools="using:SharpSprite.App.Tools"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
@@ -19,7 +19,9 @@
 	</Design.DataContext>
 
 	<Grid RowDefinitions="Auto, *, Auto">
-		<Menu Grid.Row="0"  Background="#303030">
+
+		<!-- MENU BAR -->
+		<Menu Grid.Row="0" Background="#303030">
 			<Menu.Styles>
 				<Style Selector="MenuItem">
 					<Setter Property="Background" Value="Transparent"/>
@@ -28,11 +30,11 @@
 				</Style>
 				<Style Selector="MenuItem:pointeover">
 					<Setter Property="Background" Value="#444444"/>
-				</Style>		
+				</Style>
 			</Menu.Styles>
-			
+
 			<!-- FILE -->
-            <MenuItem Header="File">
+			<MenuItem Header="File">
 				<MenuItem Header="New..." Command="{Binding NewDocumentCommand}" InputGesture="Ctrl+N"/>
 				<MenuItem Header="Open..." Command="{Binding OpenDocumentCommand}" InputGesture="Ctrl+O"/>
 				<MenuItem Header="Open Recent">
@@ -59,7 +61,7 @@
 				<Separator/>
 				<MenuItem Header="Exit" Command="{Binding ExitCommand}" InputGesture="Ctrl+Q"/>
 			</MenuItem>
-			
+
 			<!-- EDIT -->
 			<MenuItem Header="Edit">
 				<MenuItem Header="Undo" Command="{Binding UndoCommand}" InputGesture="Ctrl+Z"/>
@@ -77,10 +79,10 @@
 				</MenuItem>
 				<MenuItem Header="Delete" Command="{Binding DeleteCommand}" InputGesture="Delete"/>
 				<Separator/>
-				<MenuItem  Header="Fill" Command="{Binding FillCommand}" InputGesture="F"/>
-				<MenuItem  Header="Stroke" Command="{Binding StrokeCommand}" InputGesture="S"/>
+				<MenuItem Header="Fill" Command="{Binding FillCommand}" InputGesture="F"/>
+				<MenuItem Header="Stroke" Command="{Binding StrokeCommand}" InputGesture="S"/>
 				<Separator/>
-				<MenuItem  Header="Rotate">
+				<MenuItem Header="Rotate">
 					<MenuItem Header="180" Command="{Binding Rotate180Command}"/>
 					<MenuItem Header="90 CW" Command="{Binding Rotate90CWCommand}"/>
 					<MenuItem Header="90 CCW" Command="{Binding Rotate90CCWCommand}"/>
@@ -113,7 +115,7 @@
 				<MenuItem Header="Keyboard Shortcuts..." Command="{Binding KeyboardShortcutsCommand}" InputGesture="Ctrl+Alt+Shift+K"/>
 				<MenuItem Header="Preferences..." Command="{Binding PreferencesCommand}" InputGesture="Ctrl+K"/>
 			</MenuItem>
-			
+
 			<!-- SPRITE -->
 			<MenuItem Header="Sprite">
 				<MenuItem Header="Sprite Properties..." Command="{Binding SpritePropertiesCommand}" InputGesture="Ctrl+P"/>
@@ -129,7 +131,7 @@
 				<Separator/>
 				<MenuItem Header="Sprite Size..." Command="{Binding SpritesizeCommand}" InputGesture="Ctrl+Alt+I"/>
 				<MenuItem Header="Canvas Size..." Command="{Binding CanvasizeCommand}" InputGesture="C"/>
-				<MenuItem  Header="Rotate Canvas">
+				<MenuItem Header="Rotate Canvas">
 					<MenuItem Header="180" Command="{Binding RotateCanva180Command}"/>
 					<MenuItem Header="90 CW" Command="{Binding RotateCanva90CWCommand}"/>
 					<MenuItem Header="90 CCW" Command="{Binding RotateCanva90CCWCommand}"/>
@@ -137,59 +139,29 @@
 					<MenuItem Header="Flip Canvas Horizontal" Command="{Binding FlipCanvaHorizontalCommand}"/>
 					<MenuItem Header="Flip Canvas Vertical" Command="{Binding FlipCanvaVerticalCommand}"/>
 				</MenuItem>
-				<Separator/>
-				<MenuItem Header="Crop" Command="{Binding CropCommand}"/>
-				<MenuItem Header="Trim" Command="{Binding TrimCommand}"/>
 			</MenuItem>
-			
+
 			<!-- LAYER -->
 			<MenuItem Header="Layer">
-				<MenuItem Header="Layer Properties..." Command="{Binding LayerPropertiesCommand}" InputGesture="F2"/>
-				<MenuItem Header="Visible" Command="{Binding LayerVisibleCommand}" InputGesture="Shift+W"/>
-				<MenuItem Header="Lock Layer" Command="{Binding LockLayerCommand}"/>
-				<MenuItem Header="Open Group" Command="{Binding OpenGroupCommand}" InputGesture="Shift+E"/>
+				<MenuItem Header="New Layer..." Command="{Binding NewLayerCommand}" InputGesture="Shift+N"/>
+				<MenuItem Header="Duplicate Layer" Command="{Binding DuplicateLayerCommand}" InputGesture="Shift+D"/>
+				<MenuItem Header="Delete Layer" Command="{Binding DeleteLayerCommand}" InputGesture="Shift+Delete"/>
 				<Separator/>
-				<MenuItem Header="New">
-					<MenuItem Header="New Layer" Command="{Binding NewLayerCommand}" InputGesture="Shift+N"/>
-					<MenuItem Header="New Group" Command="{Binding NewGroupCommand}" InputGesture="Alt+Shift+N"/>
-					<Separator/>
-					<MenuItem Header="New Layer Via Copy" Command="{Binding NewLayerViaCopyCommand}" InputGesture="Ctrl+J"/>
-					<MenuItem Header="New Layer Via Cut" Command="{Binding NewLayerViaCutCommand}" InputGesture="Ctrl+Shift+J"/>
-					<Separator/>
-					<MenuItem Header="New Reference Layer From File" Command="{Binding NewReferenceLayerFromFileCommand}"/>
-					<MenuItem Header="New Tilemap Layer" Command="{Binding NewTilemapLayerCommand}" InputGesture="N"/>
-				</MenuItem>
-				<MenuItem Header="Delete Layer" Command="{Binding DeleteLayerCommand}"/>
-				<MenuItem Header="Convert To">
-					<MenuItem Header="Background Layer" Command="{Binding ConvertToBackgroundLayerCommand}"/>
-					<Separator/>
-					<MenuItem Header="Tilemap" Command="{Binding ConvertToTilemapCommand}"/>
-				</MenuItem>
-				<Separator/>
-				<MenuItem Header="Duplicate Layer" Command="{Binding DuplicateLayerCommand}"/>
-				<MenuItem Header="Merge Down" Command="{Binding MergeDownCommand}"/>
+				<MenuItem Header="Merge Down" Command="{Binding MergeDownCommand}" InputGesture="Ctrl+Down"/>
+				<MenuItem Header="Merge Up" Command="{Binding MergeUpCommand}"/>
 				<MenuItem Header="Flatten" Command="{Binding FlattenCommand}"/>
-				<MenuItem Header="Flatten Visible" Command="{Binding FlattenVisibleCommand}"/>
 			</MenuItem>
 
 			<!-- FRAME -->
 			<MenuItem Header="Frame">
-				<MenuItem Header="Frame Properties..." Command="{Binding FramePropertiesCommand}" InputGesture="P"/>
-				<MenuItem Header="Cel Properties..." Command="{Binding CelPropertiesCommand}"/>
-				<Separator/>
-				<MenuItem Header="New Frame" Command="{Binding NewFrameCommand}" InputGesture="Alt+N"/>
-				<MenuItem Header="New Empty Frame" Command="{Binding NewEmptyFrameCommand}" InputGesture="Alt+B"/>
-				<MenuItem Header="Duplicate Cel(s)" Command="{Binding DuplicateCelsCommand}" InputGesture="Alt+D"/>
-				<MenuItem Header="Duplicate Linked Cel(s)" Command="{Binding DuplicateLinkedCelsCommand}" InputGesture="Alt+M"/>
-				<MenuItem Header="Delete Frame" Command="{Binding DeleteFrameCommand}" InputGesture="Alt+C"/>
+				<MenuItem Header="New Frame" Command="{Binding NewFrameCommand}" InputGesture="Shift+Alt+N"/>
+				<MenuItem Header="Duplicate Frame" Command="{Binding DuplicateFrameCommand}" InputGesture="Shift+Alt+D"/>
+				<MenuItem Header="Delete Frame" Command="{Binding DeleteFrameCommand}" InputGesture="Shift+Alt+Delete"/>
 				<Separator/>
 				<MenuItem Header="Playback">
-					<MenuItem Header="Play Animation" Command="{Binding PlayAnimationCommand}" InputGesture="Enter"/>
-					<MenuItem Header="Play Preview Animation" Command="{Binding PlayPreviewAnimationCommand}" InputGesture="Shift+Enter"/>
-					<Separator/>
-					<MenuItem Header="Playback Speed 0.25x" Command="{Binding PlaybackSpeed025Command}"/>
+					<MenuItem Header="Play" Command="{Binding PlayCommand}" InputGesture="Space"/>
 					<MenuItem Header="Playback Speed 0.5x" Command="{Binding PlaybackSpeed05Command}"/>
-					<MenuItem Header="Playback Speed 1x" Command="{Binding PlaybackSpeed1Command}"/>
+					<MenuItem Header="Playback Speed 0.75x" Command="{Binding PlaybackSpeed075Command}"/>
 					<MenuItem Header="Playback Speed 1.5x" Command="{Binding PlaybackSpeed15Command}"/>
 					<MenuItem Header="Playback Speed 2x" Command="{Binding PlaybackSpeed2Command}"/>
 					<MenuItem Header="Playback Speed 3x" Command="{Binding PlaybackSpeed3Command}"/>
@@ -287,7 +259,7 @@
 				<Separator/>
 				<MenuItem Header="Refresh &amp; Reload Theme" Command="{Binding RefreshReloadThemeCommand}" InputGesture="F5"/>
 			</MenuItem>
-			
+
 			<!-- HELP -->
 			<MenuItem Header="Help">
 				<MenuItem Header="Readme" Command="{Binding ReadmeCommand}"/>
@@ -301,28 +273,13 @@
 				<Separator/>
 				<MenuItem Header="About" Command="{Binding AboutCommand}"/>
 			</MenuItem>
-			
+
 		</Menu>
-		<Grid Grid.Row="1" ColumnDefinitions="50, *, 200" Background="#2d2d2d">
-			
-			<StackPanel Grid.Column="0"  Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" >
-				<TextBlock Text="Tools" Foreground="#aaaaaa" Margin="0,10"/>
-				
-			</StackPanel>
-			<Border Grid.Column="1" Background="#181818" ClipToBounds="True">
-				<controls:PixelCanvasControl
-                    Document="{Binding ActiveDocument}"
-                    ActiveFrame="{Binding ActiveFrame}"
-					UndoStack="{Binding UndoStack}"
-					ActiveToolType="{Binding ActiveToolType}"
-					ForegroundColor="{Binding ForegroundColor}"
-					BackgroundColor="{Binding BackgroundColor}"
-                    Zoom="0"/>
-			</Border>
-			<StackPanel Grid.Column="2" Background="#2d2d2d" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" >
-				<TextBlock Text="Layers" Foreground="#aaaaaa" Margin="10"/>
-			</StackPanel>
-		</Grid>
+
+		<!-- DOCKING SYSTEM -->
+		<docking:DockingLayout x:Name="DockingLayout" Grid.Row="1"/>
+
+		<!-- STATUS BAR -->
 		<Border Grid.Row="2" Background="#007ACC" Height="30" Padding="0,0,0,6">
 			<TextBlock Text="{Binding StatusText}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0" FontSize="26"/>
 		</Border>

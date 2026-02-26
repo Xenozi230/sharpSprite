@@ -1,0 +1,76 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SharpSprite.App.Ui.Widgets"
+             x:Class="SharpSprite.App.Ui.Widgets.ToolbarView"
+             x:DataType="vm:ToolbarViewModel">
+
+  <UserControl.DataContext>
+    <vm:ToolbarViewModel/>
+  </UserControl.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="ToggleButton">
+      <Setter Property="Background" Value="#3d3d3d"/>
+      <Setter Property="Foreground" Value="#CCCCCC"/>
+      <Setter Property="BorderBrush" Value="#555555"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Padding" Value="6,4"/>
+      <Setter Property="MinHeight" Value="32"/>
+      <Setter Property="MinWidth" Value="40"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    
+    <Style Selector="ToggleButton:pointerover">
+      <Setter Property="Background" Value="#4a4a4a"/>
+    </Style>
+    
+    <Style Selector="ToggleButton:checked">
+      <Setter Property="Background" Value="#0066CC"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderBrush" Value="#0052A3"/>
+    </Style>
+    
+    <Style Selector="ToggleButton:checked:pointerover">
+      <Setter Property="Background" Value="#0073E6"/>
+    </Style>
+  </UserControl.Styles>
+
+  <StackPanel Orientation="Vertical" Spacing="2">
+    
+    <TextBlock Text="Tools" 
+               Foreground="#999999" 
+               FontSize="10"
+               FontWeight="Bold"
+               Margin="0,8,0,4"
+               HorizontalAlignment="Center"/>
+
+    <Separator Background="#444444" Margin="0,2"/>
+
+    <ToggleButton Content="✏" 
+                  ToolTip.Tip="Pencil"
+                  IsChecked="{Binding IsPencilActive}"
+                  Command="{Binding PickPencilCommand}"/>
+
+    <ToggleButton Content="🧹"
+                  ToolTip.Tip="Eraser"
+                  IsChecked="{Binding IsEraserActive}"
+                  Command="{Binding PickEraserCommand}"/>
+
+    <Separator Background="#444444" Margin="0,4"/>
+
+    <ToggleButton Content="✋"
+                  ToolTip.Tip="Pan"
+                  IsChecked="{Binding IsPanActive}"
+                  Command="{Binding PickPanCommand}"/>
+
+    <ToggleButton Content="🔍"
+                  ToolTip.Tip="Zoom"
+                  IsChecked="{Binding IsZoomActive}"
+                  Command="{Binding PickZoomCommand}"/>
+
+  </StackPanel>
+
+</UserControl>

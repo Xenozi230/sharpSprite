@@ -1,16 +1,36 @@
-﻿using System;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SharpSprite.App.Tools;
+using SharpSprite.App.Ui.Docking;
+using SharpSprite.App.Ui.Widgets;
 using SharpSprite.Core.Commands;
 using SharpSprite.Core.Document;
+using System;
+
+
 
 namespace SharpSprite.App.ViewModels
 {
     public partial class MainWindowViewModel : ObservableObject
     {
+
+
+
+
+        [ObservableProperty]
+        private DockingManager? _dockingManager;
+
+        [RelayCommand] private void MergeUp() => StatusText = "Merge Up — not yet implemented";
+        [RelayCommand] private void DuplicateFrame() => StatusText = "Duplicate Frame — not yet implemented";
+        [RelayCommand] private void Play() => StatusText = "Play — not yet implemented";
+        [RelayCommand] private void PlaybackSpeed075() => StatusText = "Playback Speed: 0.75x";
+
+        // ══════════════════════════════════════════════════════════════════
+        // Document Management (existant)
+        // ══════════════════════════════════════════════════════════════════
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(TitleText))]
         private Document? _activeDocument;
@@ -317,13 +337,10 @@ namespace SharpSprite.App.ViewModels
         [RelayCommand] private void About() => StatusText = "About SharpSprite";
 
         // ══════════════════════════════════════════════════════════════════
-        // Commands - ToolBar
-        // ══════════════════════════════════════════════════════════════════
+        // toolbar
+        // ══════════════════════════════════════════════════════════════════s
+        public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
-        [RelayCommand] private void PickPencil() => ActiveToolType = ToolType.Pencil;
-        [RelayCommand] private void PickEraser() => ActiveToolType = ToolType.Eraser;
-        [RelayCommand] private void PickPan() => ActiveToolType = ToolType.Pan;
-        [RelayCommand] private void PickZoom() => ActiveToolType = ToolType.Zoom;
 
         // ══════════════════════════════════════════════════════════════════
         // Helpers
