@@ -16,13 +16,20 @@ namespace SharpSprite.App.ViewModels
 {
     public partial class MainWindowViewModel : ObservableObject
     {
+        // ══════════════════════════════════════════════════════════════════
+        // Panel view models
+        // ══════════════════════════════════════════════════════════════════
+
+        public ToolbarViewModel Toolbar { get; } = new();
+
+        // ══════════════════════════════════════════════════════════════════
+        // Active document
+        // ══════════════════════════════════════════════════════════════════
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(TitleText))]
         private Document? _activeDocument;
 
-        /// <summary>
-        /// Single undo stack per document.  Replaced when the document changes.
-        /// </summary>
         [ObservableProperty]
         private UndoStack _undoStack = new UndoStack(capacity: 100);
 
@@ -30,17 +37,15 @@ namespace SharpSprite.App.ViewModels
         // Tool selection
         // ══════════════════════════════════════════════════════════════════
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(IsPencilActive))]
-        [NotifyPropertyChangedFor(nameof(IsEraserActive))]
-        [NotifyPropertyChangedFor(nameof(IsPanActive))]
-        [NotifyPropertyChangedFor(nameof(IsZoomActive))]
-        private ToolType _activeToolType = ToolType.Pencil;
-
-        public bool IsPencilActive => ActiveToolType == ToolType.Pencil;
-        public bool IsEraserActive => ActiveToolType == ToolType.Eraser;
-        public bool IsPanActive => ActiveToolType == ToolType.Pan;
-        public bool IsZoomActive => ActiveToolType == ToolType.Zoom;
+        public ToolType ActiveToolType
+        {
+            get => Toolbar.ActiveToolType;
+            set
+            {
+                Toolbar.ActiveToolType = value;
+                OnPropertyChanged();
+            }
+        }
 
         // ══════════════════════════════════════════════════════════════════
         // Colors
@@ -97,6 +102,16 @@ namespace SharpSprite.App.ViewModels
 
         public MainWindowViewModel()
         {
+            // Forward toolbar tool changes → ContextBar + canvas
+            Toolbar.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(ToolbarViewModel.ActiveToolType))
+                {
+                    //ContextBar.ActiveTool = Toolbar.ActiveToolType;
+                    OnPropertyChanged(nameof(ActiveToolType));
+                }
+            };
+
             SetDocument(CreateDefaultDocument());
         }
 
@@ -429,15 +444,6 @@ namespace SharpSprite.App.ViewModels
         [RelayCommand] private void ReleaseNotes() => StatusText = "Release Notes — not yet implemented";
         [RelayCommand] private void Twitter() => StatusText = "Twitter — not yet implemented";
         [RelayCommand] private void About() => StatusText = "About SharpSprite";
-
-        // ══════════════════════════════════════════════════════════════════
-        // Commands - ToolBar
-        // ══════════════════════════════════════════════════════════════════
-
-        [RelayCommand] private void PickPencil() => ActiveToolType = ToolType.Pencil;
-        [RelayCommand] private void PickEraser() => ActiveToolType = ToolType.Eraser;
-        [RelayCommand] private void PickPan() => ActiveToolType = ToolType.Pan;
-        [RelayCommand] private void PickZoom() => ActiveToolType = ToolType.Zoom;
 
         // ══════════════════════════════════════════════════════════════════
         // Helpers

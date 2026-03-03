@@ -80,6 +80,7 @@ namespace SharpSprite.App.Controls
         public Rgba32 ForegroundColor { get => GetValue(ForegroundColorProperty); set => SetValue(ForegroundColorProperty, value); }
         public Rgba32 BackgroundColor { get => GetValue(BackgroundColorProperty); set => SetValue(BackgroundColorProperty, value); }
 
+        public Action<int, int>? CursorMoved;
 
         // ══════════════════════════════════════════════════════════════════
         // Private state
@@ -216,6 +217,14 @@ namespace SharpSprite.App.Controls
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             base.OnPointerMoved(e);
+
+            // Report cursor position
+            var pos = e.GetPosition(this);
+            if (BuildToolContext() is { } ctx2)
+            {
+                if (ctx2.TryScreenToSprite(pos, out int sx, out int sy))
+                    CursorMoved?.Invoke(sx, sy);
+            }
 
             // Middle-mouse pan in progress
             if (_middlePanning)
