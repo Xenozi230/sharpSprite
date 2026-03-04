@@ -21,6 +21,7 @@ namespace SharpSprite.App.ViewModels
         // ══════════════════════════════════════════════════════════════════
 
         public ToolbarViewModel Toolbar { get; } = new();
+        public StatusBarViewModel StatusBar { get; } = new();
 
         // ══════════════════════════════════════════════════════════════════
         // Active document
@@ -76,12 +77,40 @@ namespace SharpSprite.App.ViewModels
                 ? "0 / 0"
                 : $"{ActiveFrame + 1} / {ActiveDocument.Sprite.FrameCount}";
 
+
+        // ══════════════════════════════════════════════════════════════════
+        // Zoom (forwarded to StatusBar)
+        // ══════════════════════════════════════════════════════════════════
+
+        private int _zoomLevel = 0; // 0 = auto-fit
+
+        public int ZoomLevel
+        {
+            get => _zoomLevel;
+            set
+            {
+                _zoomLevel = value;
+                StatusBar.Zoom = value <= 0 ? 1 : value;
+                //ContextBar.CurrentZoom = value <= 0 ? 1 : value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanvasZoom));
+            }
+        }
+
+        /// <summary>Passed directly to PixelCanvasControl.Zoom.</summary>
+        public int CanvasZoom => _zoomLevel;
+
         // ══════════════════════════════════════════════════════════════════
         // Status / title
         // ══════════════════════════════════════════════════════════════════
 
-        [ObservableProperty]
         private string _statusText = "Ready";
+
+        public string StatusText
+        {
+            get => _statusText;
+            set { _statusText = value; StatusBar.StatusMessage = value; OnPropertyChanged(); }
+        }
 
         public string TitleText
         {
@@ -113,6 +142,16 @@ namespace SharpSprite.App.ViewModels
             };
 
             SetDocument(CreateDefaultDocument());
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        // Cursor position (called by canvas control)
+        // ══════════════════════════════════════════════════════════════════
+
+        public void UpdateCursorPosition(int x, int y)
+        {
+            StatusBar.CursorX = x;
+            StatusBar.CursorY = y;
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -463,8 +502,15 @@ namespace SharpSprite.App.ViewModels
             ActiveFrame = 0;
             ActiveDocument = doc;
 
+            StatusBar.SpriteWidth = doc.Sprite.Width;
+            StatusBar.SpriteHeight = doc.Sprite.Height;
+            StatusBar.ColorMode = doc.Sprite.ColorMode.ToString();
+            StatusBar.TotalFrames = doc.Sprite.FrameCount;
+            StatusBar.CurrentFrame = 1;
+
             doc.ModifiedChanged += OnDocumentModifiedChanged;
             OnPropertyChanged(nameof(TitleText));
+            OnPropertyChanged(nameof(CanvasZoom));
         }
 
         private void OnDocumentModifiedChanged(object? sender, EventArgs e)

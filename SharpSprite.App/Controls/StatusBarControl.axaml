@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SharpSprite.App.ViewModels"
+             x:Class="SharpSprite.App.Controls.StatusBarControl"
+             x:DataType="vm:StatusBarViewModel"
+             Height="30">
+	
+	<UserControl.Styles>
+		<Style Selector="TextBlock.status">
+			<Setter Property="FontSize" Value="26"/>
+			<Setter Property="Foreground" Value="#bbbbbb"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Margin" Value="0,0,14,0"/>
+		</Style>
+
+		<Style Selector="Border.sep">
+			<Setter Property="Width" Value="1"/>
+			<Setter Property="Height" Value="14"/>
+			<Setter Property="Background" Value="#3a3a3a"/>
+			<Setter Property="Margin" Value="0,0,14,0"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Border Background="#1a1a1a"
+			BorderThickness="0,1,0,0"
+			BorderBrush="#0a0a0a">
+		<Grid ColumnDefinitions="*,Auto">
+
+			<!-- Left: cursor + sprite size -->
+			<StackPanel Grid.Column="0"
+						Orientation="Horizontal"
+						Margin="8,0,0,8"
+						VerticalAlignment="Center">
+
+				<TextBlock Classes="status" Text="{Binding CursorLabel}"
+						   ToolTip.Tip="Cursor Position"/>
+				<Border Classes="sep"/>
+				<TextBlock Classes="status" Text="{Binding SizeLabel}"
+						   ToolTip.Tip="Sprite Size"/>
+				<Border Classes="sep"/>
+				<TextBlock Classes="status" Text="{Binding ColorMode}"
+						   ToolTip.Tip="Color Mode"/>
+
+			</StackPanel>
+
+			<!-- Right: zoom + frame + message -->
+			<StackPanel Grid.Column="1"
+						Orientation="Horizontal"
+						Margin="0,0,8,8"
+						VerticalAlignment="Center">
+
+				<TextBlock Classes="status" Text="{Binding StatusMessage}"
+						   Foreground="#888888"/>
+				<Border Classes="sep"/>
+				<TextBlock Classes="status" Text="{Binding FrameLabel}"
+						   ToolTip.Tip="Current Frame"/>
+				<Border Classes="sep"/>
+				<TextBlock Classes="status" Text="{Binding ZoomLabel}"
+						   ToolTip.Tip="Zoom Level" Margin="0"/>
+
+			</StackPanel>
+
+		</Grid>
+	</Border>
+</UserControl>

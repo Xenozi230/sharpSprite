@@ -313,7 +313,7 @@
 						ActiveToolType="{Binding ActiveToolType}"
 						ForegroundColor="{Binding ForegroundColor}"
 						BackgroundColor="{Binding BackgroundColor}"
-						Zoom="0"/>
+						Zoom="{Binding CanvasZoom}"/>
 				</Border>
 
 				<!-- RIGHT: Vertical tool palette -->
@@ -326,8 +326,9 @@
 				</Border>
 			</Grid>
 		</Grid>
-		<Border Grid.Row="2" Background="#007ACC" Height="30" Padding="0,0,0,6">
-			<TextBlock Text="{Binding StatusText}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0" FontSize="26"/>
-		</Border>
+		
+		<!-- ── Status bar ──────────────────────────────────────────── -->
+		<controls:StatusBarControl Grid.Row="2"
+									DataContext="{Binding StatusBar}"/>
 	</Grid>
 </Window>
