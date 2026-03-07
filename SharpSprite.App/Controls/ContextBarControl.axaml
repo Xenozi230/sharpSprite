@@ -1,0 +1,245 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SharpSprite.App.ViewModels"
+             x:Class="SharpSprite.App.Controls.ContextBarControl"
+             x:DataType="vm:ContextBarViewModel"
+             Height="44"
+			 FontSize="26">
+
+	<UserControl.Styles>
+
+		<Style Selector="Button.ctx-btn">
+			<Setter Property="Height" Value="24"/>
+			<Setter Property="Padding" Value="6,0"/>
+			<Setter Property="Margin" Value="2,0"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="CornerRadius" Value="2"/>
+		</Style>
+
+		<Style Selector="Button.ctx-btn:pointerover">
+			<Setter Property="Background" Value="#3a3a3a"/>
+			<Setter Property="BorderBrush" Value="#555"/>
+		</Style>
+
+		<Style Selector="Button.ctx-btn.active">
+			<Setter Property="Background" Value="#1a4a7a"/>
+			<Setter Property="BorderBrush" Value="#4a9fe8"/>
+		</Style>
+
+		<Style Selector="TextBlock.ctx-label">
+			<Setter Property="Foreground" Value="#aaaaaa"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Margin" Value="4,0,2,0"/>
+		</Style>
+
+		<Style Selector="TextBlock.ctx-icon">
+			<Setter Property="Foreground" Value="#cccccc"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+
+		<Style Selector="Border.ctx-sep">
+			<Setter Property="Width" Value="1"/>
+			<Setter Property="Height" Value="20"/>
+			<Setter Property="Background" Value="#3a3a3a"/>
+			<Setter Property="Margin" Value="4,0"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+
+	</UserControl.Styles>
+
+	<Border Background="#252525"
+			BorderThickness="0,0,0,1"
+			BorderBrush="#1a1a1a">
+
+		<StackPanel Orientation="Horizontal"
+					VerticalAlignment="Center"
+					Margin="4,0">
+
+			<!-- ── PENCIL context ───────────────────────────── -->
+			<StackPanel Orientation="Horizontal"
+						IsVisible="{Binding ShowPencilContext}">
+
+				<!-- Brush shape: circle / square -->
+				<Button Classes="ctx-btn"
+						Classes.active="{Binding IsCircleBrush}"
+						Command="{Binding SetCircleBrushCommand}"
+						ToolTip.Tip="Circle Brush">
+					<Canvas Width="14" Height="14">
+						<Ellipse Canvas.Left="1" Canvas.Top="1" Width="12" Height="12"
+								 Stroke="#cccccc" StrokeThickness="1.5" Fill="Transparent"/>
+					</Canvas>
+				</Button>
+
+				<Button Classes="ctx-btn"
+						Classes.active="{Binding IsSquareBrush}"
+						Command="{Binding SetSquareBrushCommand}"
+						ToolTip.Tip="Square Brush">
+					<Canvas Width="14" Height="14">
+						<Rectangle Canvas.Left="1" Canvas.Top="1" Width="12" Height="12"
+								   Stroke="#cccccc" StrokeThickness="1.5" Fill="Transparent"/>
+					</Canvas>
+				</Button>
+
+				<Border Classes="ctx-sep"/>
+
+				<!-- Brush size -->
+				<TextBlock Classes="ctx-label" Text="Size:"/>
+				<Button Classes="ctx-btn" Width="22"
+						Command="{Binding DecreaseBrushCommand}"
+						ToolTip.Tip="Decrease Brush Size ([)">
+					<TextBlock Classes="ctx-icon" Text="-"/>
+				</Button>
+				<Border Width="28" Height="22" VerticalAlignment="Center"
+						Background="#1e1e1e" CornerRadius="2"
+						BorderThickness="1" BorderBrush="#3a3a3a">
+					<TextBlock Text="{Binding BrushSize}"
+							   Foreground="#dddddd"
+							   Height="25"
+							   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Border>
+				<Button Classes="ctx-btn" Width="22"
+						Command="{Binding IncreaseBrushCommand}"
+						ToolTip.Tip="Increase Brush Size (])">
+					<TextBlock Classes="ctx-icon" Text="+"/>
+				</Button>
+
+				<Border Classes="ctx-sep"/>
+
+				<!-- Pixel-perfect toggle -->
+				<Button Classes="ctx-btn"
+						Classes.active="{Binding PixelPerfect}"
+						Command="{Binding TogglePixelPerfectCommand}"
+						ToolTip.Tip="Pixel-Perfect Mode">
+					<StackPanel Orientation="Horizontal" Spacing="3">
+						<TextBlock Classes="ctx-icon" Text="✦"/>
+						<TextBlock Classes="ctx-label" Margin="0" Text="Pixel-perfect"/>
+					</StackPanel>
+				</Button>
+
+				<Border Classes="ctx-sep"/>
+
+				<!-- Opacity -->
+				<TextBlock Classes="ctx-label" Text="Opacity:"/>
+				<Slider Value="{Binding ToolOpacity}"
+						Minimum="0" Maximum="100"
+						Width="80"
+						VerticalAlignment="Center"
+						ToolTip.Tip="{Binding ToolOpacity}"/>
+				<TextBlock Text="{Binding ToolOpacity}"
+						   Foreground="#aaa"
+						   VerticalAlignment="Center" Margin="2,0,0,0"/>
+				<TextBlock Classes="ctx-label" Text="%" Margin="0"/>
+
+			</StackPanel>
+
+			<!-- ── ERASER context ───────────────────────────── -->
+			<StackPanel Orientation="Horizontal"
+						IsVisible="{Binding ShowEraserContext}">
+				<TextBlock Classes="ctx-label" Text="Size:"/>
+				<Button Classes="ctx-btn" Width="20" Command="{Binding DecreaseBrushCommand}">
+					<TextBlock Classes="ctx-icon" Text="-"/>
+				</Button>
+				<Border Width="28" Height="22" VerticalAlignment="Center"
+						Background="#1e1e1e" CornerRadius="2"
+						BorderThickness="1" BorderBrush="#3a3a3a">
+					<TextBlock Text="{Binding BrushSize}" FontSize="11" Foreground="#dddddd"
+							   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Border>
+				<Button Classes="ctx-btn" Width="20" Command="{Binding IncreaseBrushCommand}">
+					<TextBlock Classes="ctx-icon" Text="+"/>
+				</Button>
+
+				<Border Classes="ctx-sep"/>
+				<TextBlock Classes="ctx-label" Text="Opacity:"/>
+				<Slider Value="{Binding ToolOpacity}" Minimum="0" Maximum="100" Width="80"
+						VerticalAlignment="Center"/>
+				<TextBlock Text="{Binding ToolOpacity}" FontSize="10" Foreground="#aaa"
+						   VerticalAlignment="Center" Margin="2,0"/>
+				<TextBlock Classes="ctx-label" Text="%" Margin="0"/>
+			</StackPanel>
+
+			<!-- ── SELECTION context ────────────────────────── -->
+			<StackPanel Orientation="Horizontal"
+						IsVisible="{Binding ShowSelectionContext}">
+				<TextBlock Classes="ctx-label" Text="Mode:"/>
+				<Button Classes="ctx-btn" ToolTip.Tip="Replace">
+					<TextBlock Classes="ctx-icon" Text="⬚"/>
+				</Button>
+				<Button Classes="ctx-btn" ToolTip.Tip="Add to selection">
+					<TextBlock Classes="ctx-icon" Text="⊞"/>
+				</Button>
+				<Button Classes="ctx-btn" ToolTip.Tip="Subtract from selection">
+					<TextBlock Classes="ctx-icon" Text="⊟"/>
+				</Button>
+				<Border Classes="ctx-sep"/>
+				<Button Classes="ctx-btn" ToolTip.Tip="Select All (Ctrl+A)">
+					<TextBlock Classes="ctx-label" Text="All" Margin="0"/>
+				</Button>
+				<Button Classes="ctx-btn" ToolTip.Tip="Deselect (Escape)">
+					<TextBlock Classes="ctx-label" Text="None" Margin="0"/>
+				</Button>
+				<Button Classes="ctx-btn" ToolTip.Tip="Invert Selection (Ctrl+Shift+I)">
+					<TextBlock Classes="ctx-label" Text="Invert" Margin="0"/>
+				</Button>
+			</StackPanel>
+
+			<!-- ── SHAPE context ─────────────────────────────── -->
+			<StackPanel Orientation="Horizontal"
+						IsVisible="{Binding ShowShapeContext}">
+				<Button Classes="ctx-btn"
+						Classes.active="{Binding IsOutlineOnly}"
+						Command="{Binding ToggleFilledCommand}"
+						ToolTip.Tip="Outline Only">
+					<Canvas Width="14" Height="14">
+						<Rectangle Canvas.Left="1" Canvas.Top="1" Width="12" Height="12"
+								   Stroke="#cccccc" StrokeThickness="1.5" Fill="Transparent"/>
+					</Canvas>
+				</Button>
+				<Button Classes="ctx-btn"
+						Classes.active="{Binding IsFilled}"
+						Command="{Binding ToggleFilledCommand}"
+						ToolTip.Tip="Filled">
+					<Canvas Width="14" Height="14">
+						<Rectangle Canvas.Left="1" Canvas.Top="1" Width="12" Height="12"
+								   Stroke="#cccccc" StrokeThickness="1" Fill="#cccccc"/>
+					</Canvas>
+				</Button>
+				<Border Classes="ctx-sep"/>
+				<TextBlock Classes="ctx-label" Text="Stroke:"/>
+				<Border Width="28" Height="22" VerticalAlignment="Center"
+						Background="#1e1e1e" CornerRadius="2"
+						BorderThickness="1" BorderBrush="#3a3a3a">
+					<TextBlock Text="{Binding BrushSize}" FontSize="11" Foreground="#dddddd"
+							   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Border>
+			</StackPanel>
+
+			<!-- ── FILL context ──────────────────────────────── -->
+			<StackPanel Orientation="Horizontal"
+						IsVisible="{Binding ShowFillContext}">
+				<TextBlock Classes="ctx-label" Text="Contiguous:"/>
+				<CheckBox IsChecked="{Binding Contiguous}"
+						  VerticalAlignment="Center"
+						  Margin="2,0,0,0"/>
+			</StackPanel>
+
+			<!-- ── ZOOM context ──────────────────────────────── -->
+			<StackPanel Orientation="Horizontal"
+						IsVisible="{Binding ShowZoomContext}">
+				<TextBlock Classes="ctx-label" Text="Zoom:"/>
+				<Border Width="44" Height="22" VerticalAlignment="Center"
+						Background="#1e1e1e" CornerRadius="2"
+						BorderThickness="1" BorderBrush="#3a3a3a">
+					<TextBlock Text="{Binding ZoomText}" FontSize="11" Foreground="#dddddd"
+							   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Border>
+			</StackPanel>
+
+		</StackPanel>
+	</Border>
+</UserControl>

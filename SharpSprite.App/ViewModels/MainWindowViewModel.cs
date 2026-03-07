@@ -22,6 +22,7 @@ namespace SharpSprite.App.ViewModels
 
         public ToolbarViewModel Toolbar { get; } = new();
         public StatusBarViewModel StatusBar { get; } = new();
+        public ContextBarViewModel ContextBar { get; } = new();
 
         // ══════════════════════════════════════════════════════════════════
         // Active document
@@ -91,7 +92,7 @@ namespace SharpSprite.App.ViewModels
             {
                 _zoomLevel = value;
                 StatusBar.Zoom = value <= 0 ? 1 : value;
-                //ContextBar.CurrentZoom = value <= 0 ? 1 : value;
+                ContextBar.CurrentZoom = value <= 0 ? 1 : value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanvasZoom));
             }
