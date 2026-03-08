@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SharpSprite.App.ViewModels"
+             xmlns:controls="using:SharpSprite.App.Controls"
+             x:Class="SharpSprite.App.Controls.TimelineControl"
+             x:DataType="vm:TimelineViewModel">
+
+	<UserControl.Styles>
+		<Style Selector="Button.play-btn">
+			<Setter Property="Width" Value="24"/>
+			<Setter Property="Height" Value="22"/>
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="Margin" Value="1,0"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="CornerRadius" Value="2"/>
+		</Style>
+		<Style Selector="Button.play-btn:pointerover">
+			<Setter Property="Background" Value="#3a3a3a"/>
+			<Setter Property="BorderBrush" Value="#555"/>
+		</Style>
+		<Style Selector="TextBlock.play-icon">
+			<Setter Property="FontSize" Value="11"/>
+			<Setter Property="Foreground" Value="#aaaaaa"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Grid RowDefinitions="28,*" Background="#222222">
+
+		<!-- Playback controls row -->
+		<Border Grid.Row="0"
+				Background="#1e1e1e"
+				BorderThickness="0,0,0,1"
+				BorderBrush="#111111">
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
+
+				<!-- First frame -->
+				<Button Classes="play-btn"
+						Command="{Binding GoToFirstFrameCommand}"
+						ToolTip.Tip="First Frame (Home)">
+					<TextBlock Classes="play-icon" Text="⏮"/>
+				</Button>
+
+				<!-- Prev frame -->
+				<Button Classes="play-btn"
+						Command="{Binding PreviousFrameCommand}"
+						ToolTip.Tip="Previous Frame (←)">
+					<TextBlock Classes="play-icon" Text="⏴"/>
+				</Button>
+
+				<Button Classes="play-btn"
+						Command="{Binding TogglePlayCommand}"
+						IsVisible="{Binding IsNotPlaying}"
+						ToolTip.Tip="Play (Enter)" Width="28">
+					<TextBlock Classes="play-icon" Text="▶" FontSize="13"/>
+				</Button>
+
+				<Button Classes="play-btn"
+						Command="{Binding TogglePlayCommand}"
+						IsVisible="{Binding IsPlaying}"
+						ToolTip.Tip="Stop (Enter)" Width="28">
+					<TextBlock Classes="play-icon" Text="⏹" FontSize="13"/>
+				</Button>
+
+				<!-- Next frame -->
+				<Button Classes="play-btn"
+						Command="{Binding NextFrameCommand}"
+						ToolTip.Tip="Next Frame (→)">
+					<TextBlock Classes="play-icon" Text="⏵"/>
+				</Button>
+
+				<!-- Last frame -->
+				<Button Classes="play-btn"
+						Command="{Binding GoToLastFrameCommand}"
+						ToolTip.Tip="Last Frame (End)">
+					<TextBlock Classes="play-icon" Text="⏭"/>
+				</Button>
+
+				<!-- Separator -->
+				<Border Width="1" Height="16" Background="#3a3a3a" Margin="4,0" VerticalAlignment="Center"/>
+
+				<!-- Loop toggle -->
+				<ToggleButton IsChecked="{Binding Looping}"
+							  Width="24" Height="22"
+							  Padding="0" Margin="1,0"
+							  Background="Transparent"
+							  ToolTip.Tip="Loop Playback">
+					<TextBlock Text="🔁" FontSize="13"
+							   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</ToggleButton>
+
+				<!-- Frame label -->
+				<Border Width="1" Height="16" Background="#3a3a3a" Margin="4,0" VerticalAlignment="Center"/>
+				<TextBlock Text="{Binding FrameLabel}"
+						   Foreground="#888888"
+						   VerticalAlignment="Center" Margin="4,0"/>
+
+				<!-- FPS -->
+				<TextBlock Text="FPS:" Foreground="#555555"
+						   VerticalAlignment="Center" Margin="8,0,2,0"/>
+				<TextBlock Text="{Binding Fps}"
+						   Foreground="#777777"
+						   VerticalAlignment="Center"/>
+
+			</StackPanel>
+		</Border>
+
+		<!-- Skia timeline canvas -->
+		<controls:TimelineSkiaControl Grid.Row="1"
+									  ViewModel="{Binding}"/>
+
+	</Grid>
+</UserControl>

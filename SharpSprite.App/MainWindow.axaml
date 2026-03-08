@@ -328,6 +328,12 @@
 								BackgroundColor="{Binding BackgroundColor}"
 								Zoom="{Binding CanvasZoom}"/>
 						</Border>
+
+						<Border Grid.Row="1"
+								BorderThickness="0,1,0,0"
+								BorderBrush="#111111">
+							<controls:TimelineControl DataContext="{Binding TimelineVM}"/>
+						</Border>
 					</Grid>
 
 					<!-- RIGHT: Vertical tool palette -->

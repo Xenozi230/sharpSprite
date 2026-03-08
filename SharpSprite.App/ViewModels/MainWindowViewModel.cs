@@ -22,6 +22,7 @@ namespace SharpSprite.App.ViewModels
 
         public ToolbarViewModel Toolbar { get; } = new();
         public PaletteViewModel Palette { get; } = new();
+        public TimelineViewModel TimelineVM { get; } = new();
         public StatusBarViewModel StatusBar { get; } = new();
         public ContextBarViewModel ContextBar { get; } = new();
 
@@ -46,6 +47,7 @@ namespace SharpSprite.App.ViewModels
             set
             {
                 Toolbar.ActiveToolType = value;
+                ContextBar.ActiveTool = value;
                 OnPropertyChanged();
             }
         }
@@ -71,14 +73,16 @@ namespace SharpSprite.App.ViewModels
         // Frame navigation
         // ══════════════════════════════════════════════════════════════════
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(FrameLabel))]
-        private int _activeFrame;
-
-        public string FrameLabel =>
-            ActiveDocument == null
-                ? "0 / 0"
-                : $"{ActiveFrame + 1} / {ActiveDocument.Sprite.FrameCount}";
+        public int ActiveFrame
+        {
+            get => TimelineVM.CurrentFrame;
+            set
+            {
+                TimelineVM.CurrentFrame = value;
+                StatusBar.CurrentFrame = value + 1;
+                OnPropertyChanged();
+            }
+        }
 
 
         // ══════════════════════════════════════════════════════════════════
@@ -309,7 +313,10 @@ namespace SharpSprite.App.ViewModels
                 lifetime.Shutdown();
         }
 
-        // EDIT 
+        // ══════════════════════════════════════════════════════════════════
+        // Commands – EDIT
+        // ══════════════════════════════════════════════════════════════════
+
         [RelayCommand(CanExecute = nameof(CanUndo))]
         private void Undo()
         {
@@ -409,7 +416,7 @@ namespace SharpSprite.App.ViewModels
         [RelayCommand] private void DuplicateCels() => StatusText = "Duplicate Cel(s) — not yet implemented";
         [RelayCommand] private void DuplicateLinkedCels() => StatusText = "Duplicate Linked Cel(s) — not yet implemented";
         [RelayCommand] private void DeleteFrame() => StatusText = "Delete Frame — not yet implemented";
-        [RelayCommand] private void PlayAnimation() => StatusText = "Play Animation — not yet implemented";
+        [RelayCommand] private void PlayAnimation() => TimelineVM.TogglePlayCommand.Execute(null);
         [RelayCommand] private void PlayPreviewAnimation() => StatusText = "Play Preview Animation — not yet implemented";
         [RelayCommand] private void PlaybackSpeed025() => StatusText = "Playback Speed: 0.25x";
         [RelayCommand] private void PlaybackSpeed05() => StatusText = "Playback Speed: 0.5x";
@@ -424,22 +431,10 @@ namespace SharpSprite.App.ViewModels
         [RelayCommand] private void TagProperties() => StatusText = "Tag Properties — not yet implemented";
         [RelayCommand] private void NewTag() => StatusText = "New Tag — not yet implemented";
         [RelayCommand] private void DeleteTag() => StatusText = "Delete Tag — not yet implemented";
-        [RelayCommand] private void FirstFrame() => StatusText = "First Frame — not yet implemented";
-
-        [RelayCommand]
-        private void PreviousFrame()
-        {
-            if (ActiveFrame > 0) ActiveFrame--;
-        }
-
-        [RelayCommand]
-        private void NextFrame()
-        {
-            if (ActiveDocument == null) return;
-            if (ActiveFrame < ActiveDocument.Sprite.FrameCount - 1) ActiveFrame++;
-        }
-
-        [RelayCommand] private void LastFrame() => StatusText = "Last Frame — not yet implemented";
+        [RelayCommand] private void FirstFrame() => TimelineVM.GoToFirstFrameCommand.Execute(null);
+        [RelayCommand] private void PreviousFrame() => TimelineVM.PreviousFrameCommand.Execute(null);
+        [RelayCommand] private void NextFrame() => TimelineVM.NextFrameCommand.Execute(null);
+        [RelayCommand] private void LastFrame() => TimelineVM.GoToLastFrameCommand.Execute(null);
         [RelayCommand] private void FirstFrameInTag() => StatusText = "First Frame in Tag — not yet implemented";
         [RelayCommand] private void LastFrameInTag() => StatusText = "Last Frame in Tag — not yet implemented";
         [RelayCommand] private void GoToFrame() => StatusText = "Go to Frame — not yet implemented";
@@ -515,9 +510,10 @@ namespace SharpSprite.App.ViewModels
 
             // Replace undo stack first so the canvas sees the new one
             UndoStack = newStack;
-            ActiveFrame = 0;
             ActiveDocument = doc;
+            doc.ModifiedChanged += OnDocumentModifiedChanged;
 
+            TimelineVM.SyncFromDocument(doc);
             Palette.LoadFromPalette(doc.Sprite.GetPalette(0));
 
             StatusBar.SpriteWidth = doc.Sprite.Width;
@@ -526,8 +522,8 @@ namespace SharpSprite.App.ViewModels
             StatusBar.TotalFrames = doc.Sprite.FrameCount;
             StatusBar.CurrentFrame = 1;
 
-            doc.ModifiedChanged += OnDocumentModifiedChanged;
             OnPropertyChanged(nameof(TitleText));
+            OnPropertyChanged(nameof(ActiveFrame));
             OnPropertyChanged(nameof(CanvasZoom));
         }
 
